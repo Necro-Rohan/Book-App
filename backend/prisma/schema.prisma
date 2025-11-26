@@ -13,14 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum BookStatus {
+  AVAILABLE
+  MAINTENANCE
+  LOANED
+  RESERVED
+}
+
 model Book {
   id    Int    @id @default(autoincrement())
   title String
   summary String
-  auther Author @relation(fields: [authorId], references: [id])
-  authorId Int
-  ISBN String 
+  isbn String 
   genre BookGenre[]
+  // url String
+  author Author @relation(fields: [authorId], references: [id])
+  authorId Int
+  instance BookInstance[]
 }
 
 model Author {
@@ -29,6 +38,9 @@ model Author {
   lastName String
   dateOfBirth DateTime
   dateOfDeath DateTime?
+  name String
+  lifeSpan String?
+  // url String
   books Book[]
 }
 
@@ -45,6 +57,15 @@ model BookGenre {
   genre Genre @relation(fields: [genreId], references: [id])
 
   @@id([bookId, genreId])
+}
+
+model BookInstance {
+  id Int @id @default(autoincrement())
+  imprint String
+  status BookStatus @default(AVAILABLE)
+  dueBack DateTime?
+  book Book @relation(fields: [bookId], references: [id])
+  bookId Int
 }
 
 

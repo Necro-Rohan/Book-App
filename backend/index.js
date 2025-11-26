@@ -1,13 +1,16 @@
-const express = require('express');
-const {PrismaClient} = require('@prisma/client');
+const bookRoutes = require("./src/routes/book.js");
+const express = require("express");
+const dotenv = require("dotenv");
 
-const prisma = new PrismaClient();
-
+dotenv.config();
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-})
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
+app.use("/books", bookRoutes);
 
 const port = 4000;
 
